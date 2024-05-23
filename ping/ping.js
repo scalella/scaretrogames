@@ -107,30 +107,30 @@ function update() {
         ball.speed += .15;
     }
 
-// Colisión con la paleta de la computadora
-if (
-    ball.x + ball.radius > computer.x && 
-    ball.x - ball.radius < computer.x + computer.width &&
-    ball.y + ball.radius > computer.y &&
-    ball.y - ball.radius < computer.y + computer.height
-) {
-    let collidePoint = ball.y - (computer.y + computer.height / 2);
-    collidePoint = collidePoint / (computer.height / 2);
-    let angleRad = (Math.PI / 4) * collidePoint;
+    // Colisión con la paleta de la computadora
+    if (
+        ball.x + ball.radius > computer.x && 
+        ball.x - ball.radius < computer.x + computer.width &&
+        ball.y + ball.radius > computer.y &&
+        ball.y - ball.radius < computer.y + computer.height
+    ) {
+        let collidePoint = ball.y - (computer.y + computer.height / 2);
+        collidePoint = collidePoint / (computer.height / 2);
+        let angleRad = (Math.PI / 4) * collidePoint;
 
-    let direction = ball.x - (canvas.width / 2) > 0 ? 1 : -1;
-    ball.dx = -direction * ball.speed * Math.cos(angleRad);
-    ball.dy = ball.speed * Math.sin(angleRad);
-    ball.speed += 1.91;
-}
+        let direction = ball.x - (canvas.width / 2) > 0 ? 1 : -1;
+        ball.dx = -direction * ball.speed * Math.cos(angleRad);
+        ball.dy = ball.speed * Math.sin(angleRad);
+        ball.speed += 1.91;
+    }
 
     // Resetea la pelota y actualiza el marcador cuando toca la línea de fondo
     if (ball.x + ball.radius > canvas.width) {
         computerScore++;
-        resetBall();
+        resetBall(player); // La pelota sale de la paleta del jugador
     } else if (ball.x - ball.radius < 0) {
         playerScore++;
-        resetBall();
+        resetBall(computer); // La pelota sale de la paleta de la computadora
     }
 
     // Mueve la paleta del jugador
@@ -158,12 +158,13 @@ if (
     }
 }
 
-// Resetea la pelota al centro
-function resetBall() {
-    ball.x = canvas.width / 2;
-    ball.y = canvas.height / 2;
-    ball.dx *= -1;
-    ball.speed = 1; // Resetea la velocidad
+// Resetea la pelota para salir desde la paleta del jugador que hizo el punto
+function resetBall(paddle) {
+    ball.speed = 4; // Resetea la velocidad de la pelota
+    ball.x = paddle.x + (paddle === player ? -ball.radius : paddle.width + ball.radius);
+    ball.y = paddle.y + paddle.height / 2;
+    ball.dx = paddle === player ? -ball.speed : ball.speed;
+    ball.dy = 0;
 }
 
 // Event listeners para el movimiento de la paleta del jugador
