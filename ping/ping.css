@@ -11,6 +11,7 @@ body {
 }
 
 #pingCanvas {
+    height: 80%;
     border: 1px solid #00ff44;
     background-color: #000;
     margin: 1%;
